@@ -233,7 +233,7 @@ class _NewProjectPageState extends State<NewProjectPage> {
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
                 child: const Text(
-                  'Submit',
+                  'Generate',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
