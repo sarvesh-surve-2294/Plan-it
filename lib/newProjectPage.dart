@@ -15,7 +15,8 @@ class _NewProjectPageState extends State<NewProjectPage> {
 
   final TextEditingController numRoomsController = TextEditingController();
   List<TextEditingController> roomTypeControllers = [];
-  List<TextEditingController> roomSizeControllers = [];
+  List<TextEditingController> roomLengthControllers = [];
+  List<TextEditingController> roomWidthControllers = [];
   List<TextEditingController> numWindowsControllers = [];
   List<TextEditingController> numDoorsControllers = [];
   List<List<TextEditingController>> windowSizeControllers = [];
@@ -109,7 +110,9 @@ class _NewProjectPageState extends State<NewProjectPage> {
                     // Adjust the number of controllers based on the input
                     roomTypeControllers =
                         List.generate(numRooms, (_) => TextEditingController());
-                    roomSizeControllers =
+                    roomLengthControllers =
+                        List.generate(numRooms, (_) => TextEditingController());
+                    roomWidthControllers =
                         List.generate(numRooms, (_) => TextEditingController());
                     numWindowsControllers =
                         List.generate(numRooms, (_) => TextEditingController());
@@ -141,12 +144,28 @@ class _NewProjectPageState extends State<NewProjectPage> {
                         labelText: 'Room Type (e.g. Bedroom, Kitchen)',
                       ),
                     ),
-                    TextField(
-                      controller: roomSizeControllers[index],
-                      decoration: const InputDecoration(
-                        labelText: 'Room Size (sq ft)',
-                      ),
-                      keyboardType: TextInputType.number,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: roomLengthControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Room Length (ft)',
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: TextField(
+                            controller: roomWidthControllers[index],
+                            decoration: const InputDecoration(
+                              labelText: 'Room Width (ft)',
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
                     ),
                     TextField(
                       controller: numWindowsControllers[index],
@@ -212,15 +231,14 @@ class _NewProjectPageState extends State<NewProjectPage> {
                   // Print room details
                   for (int i = 0; i < numRooms; i++) {
                     print("Room ${i + 1} Type: ${roomTypeControllers[i].text}");
-                    print("Room ${i + 1} Size: ${roomSizeControllers[i].text}");
-                    print(
-                        "Room ${i + 1} Windows: ${numWindowsControllers[i].text}");
+                    print("Room ${i + 1} Length: ${roomLengthControllers[i].text}");
+                    print("Room ${i + 1} Width: ${roomWidthControllers[i].text}");
+                    print("Room ${i + 1} Windows: ${numWindowsControllers[i].text}");
                     for (int j = 0; j < windowSizeControllers[i].length; j++) {
                       print(
                           "Window ${j + 1} Size: ${windowSizeControllers[i][j].text}");
                     }
-                    print(
-                        "Room ${i + 1} Doors: ${numDoorsControllers[i].text}");
+                    print("Room ${i + 1} Doors: ${numDoorsControllers[i].text}");
                     for (int k = 0; k < doorSizeControllers[i].length; k++) {
                       print(
                           "Door ${k + 1} Size: ${doorSizeControllers[i][k].text}");
@@ -255,7 +273,8 @@ class _NewProjectPageState extends State<NewProjectPage> {
     outerWallController.dispose();
     numRoomsController.dispose();
     roomTypeControllers.forEach((controller) => controller.dispose());
-    roomSizeControllers.forEach((controller) => controller.dispose());
+    roomLengthControllers.forEach((controller) => controller.dispose());
+    roomWidthControllers.forEach((controller) => controller.dispose());
     numWindowsControllers.forEach((controller) => controller.dispose());
     numDoorsControllers.forEach((controller) => controller.dispose());
     windowSizeControllers
