@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
 class SignupPage extends StatefulWidget {
   @override
@@ -6,7 +7,29 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String? _selectedPurpose;
+
+  Future<void> _register() async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // Registration successful, navigate to login page or dashboard
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration successful')),
+      );
+      Navigator.pop(context); // Go back to login page after successful signup
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration failed: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,23 +74,9 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Email',
@@ -109,9 +118,10 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
+                child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Password',
@@ -124,9 +134,7 @@ class _SignupPageState extends State<SignupPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  // Add signup logic here
-                },
+                onPressed: _register,
                 child: const Text('Sign Up'),
                 style: ElevatedButton.styleFrom(
                   primary: const Color.fromARGB(255, 204, 177, 250),
@@ -135,19 +143,6 @@ class _SignupPageState extends State<SignupPage> {
                   textStyle: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Navigate back to the login page
-                },
-                child: const Text(
-                  "Already have an account? Login",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
                   ),
                 ),
               ),

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'forgotPassword.dart'; // Import the ForgotPasswordPage
-import 'dashboardPage.dart'; // Import the DashboardPage
+import 'dashboardPage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(); // Initialize Firebase
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -12,7 +16,35 @@ void main() {
   );
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      // If login is successful, navigate to the dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,8 +88,9 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Email',
@@ -71,9 +104,10 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
+                child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Password',
@@ -86,12 +120,7 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => DashboardPage()),
-                  );
-                },
+                onPressed: _login,
                 child: const Text('Login'),
                 style: ElevatedButton.styleFrom(
                   primary: const Color.fromARGB(255, 204, 177, 250),

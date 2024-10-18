@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1033347198466",
+    "project_id": "plan-it-c7a9b",
+    "storage_bucket": "plan-it-c7a9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033347198466:android:721329ec9f4d4e5085c11b",
+        "android_client_info": {
+          "package_name": "com.example.login_ui"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtdWeaxHShcnv6tyl3kwDfi-mv0agBQBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
