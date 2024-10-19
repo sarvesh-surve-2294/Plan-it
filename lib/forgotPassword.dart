@@ -80,7 +80,8 @@ class ForgotPasswordPage extends StatelessWidget {
                 },
                 child: const Text('Submit'),
                 style: ElevatedButton.styleFrom(
-                  primary: const Color.fromARGB(255, 204, 177, 250),
+                  backgroundColor: const Color.fromARGB(255, 204, 177,
+                      250), // Updated here to use backgroundColor
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: const TextStyle(

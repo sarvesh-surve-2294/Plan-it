@@ -1,53 +1,58 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
-import 'package:email_validator/email_validator.dart'; // Import email validator package
+import 'signup.dart';
+import 'forgotPassword.dart';
+import 'dashboardPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SignupPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _selectedPurpose;
+  bool _isLoading = false; // Track loading state
 
-  Future<void> _register() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-
-    // Validate email format
-    if (!EmailValidator.validate(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Invalid email format')),
-      );
-      return;
-    }
-
-    // Validate password length
-    if (password.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password must be at least 6 characters long')),
-      );
-      return;
-    }
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true; // Show loading indicator
+    });
 
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
       );
-      // Registration successful, navigate to login page or dashboard
+      // Navigate to dashboard if login is successful
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardPage()),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Show specific error messages
+      String message;
+      switch (e.code) {
+        case 'user-not-found':
+          message = 'No user found for that email.';
+          break;
+        case 'wrong-password':
+          message = 'Wrong password provided for that user.';
+          break;
+        case 'invalid-email':
+          message = 'The email address is not valid.';
+          break;
+        default:
+          message = 'Login failed. Please try again.';
+      }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration successful')),
+        SnackBar(content: Text(message)),
       );
-      Navigator.pop(context); // Go back to login page after successful signup
-    } catch (e) {
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registration failed: $e')),
-      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loading indicator
+      });
     }
   }
 
@@ -84,7 +89,7 @@ class _SignupPageState extends State<SignupPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const Text(
-                "Sign Up",
+                "Login",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
@@ -100,34 +105,6 @@ class _SignupPageState extends State<SignupPage> {
                     filled: true,
                     fillColor: Colors.white,
                     hintText: 'Email',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: DropdownButtonFormField<String>(
-                  value: _selectedPurpose,
-                  hint: const Text('Purpose'),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedPurpose = newValue;
-                    });
-                  },
-                  items: <String>['Professional', 'Educational']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       borderSide: BorderSide.none,
@@ -154,15 +131,55 @@ class _SignupPageState extends State<SignupPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _register,
-                child: const Text('Sign Up'),
+                onPressed:
+                    _isLoading ? null : _login, // Disable button while loading
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        color: Colors.white) // Show loading indicator
+                    : const Text('Login'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 204, 177, 250),
+                  backgroundColor:
+                      const Color.fromARGB(255, 204, 177, 250), // Updated here
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 0),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupPage()),
+                  );
+                },
+                child: const Text(
+                  "New user? Signup",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 0.5),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ForgotPasswordPage()),
+                    );
+                  },
+                  child: const Text(
+                    "Forgot password?",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),

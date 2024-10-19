@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'feedbackPage.dart';
 import 'aboutPage.dart'; // Import the AboutPage
-import 'main.dart';
 import 'newProjectPage.dart';
-import 'recentProjectsPage.dart'; // Import the NewProjectPage
+import 'recentProjectsPage.dart'; // Import the RecentProjectsPage
 import 'likedProjectsPage.dart';
+import 'login.dart'; // Import the LoginPage
 
 class DashboardPage extends StatelessWidget {
   @override
@@ -101,10 +101,12 @@ class DashboardPage extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                // Navigate to the HomePage (LoginPage)
+                // Navigate to the LoginPage
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LoginPage()), // Changed from HomePage() to LoginPage()
                 );
               },
             ),
@@ -130,7 +132,8 @@ class DashboardPage extends StatelessWidget {
                 ); // Define the action for the button here
               },
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF4A148C), // Button color
+                backgroundColor:
+                    Color(0xFF4A148C), // Updated here to use backgroundColor
                 padding: const EdgeInsets.symmetric(
                     horizontal: 50, vertical: 15), // Button padding
               ),

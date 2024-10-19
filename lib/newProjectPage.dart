@@ -231,14 +231,18 @@ class _NewProjectPageState extends State<NewProjectPage> {
                   // Print room details
                   for (int i = 0; i < numRooms; i++) {
                     print("Room ${i + 1} Type: ${roomTypeControllers[i].text}");
-                    print("Room ${i + 1} Length: ${roomLengthControllers[i].text}");
-                    print("Room ${i + 1} Width: ${roomWidthControllers[i].text}");
-                    print("Room ${i + 1} Windows: ${numWindowsControllers[i].text}");
+                    print(
+                        "Room ${i + 1} Length: ${roomLengthControllers[i].text}");
+                    print(
+                        "Room ${i + 1} Width: ${roomWidthControllers[i].text}");
+                    print(
+                        "Room ${i + 1} Windows: ${numWindowsControllers[i].text}");
                     for (int j = 0; j < windowSizeControllers[i].length; j++) {
                       print(
                           "Window ${j + 1} Size: ${windowSizeControllers[i][j].text}");
                     }
-                    print("Room ${i + 1} Doors: ${numDoorsControllers[i].text}");
+                    print(
+                        "Room ${i + 1} Doors: ${numDoorsControllers[i].text}");
                     for (int k = 0; k < doorSizeControllers[i].length; k++) {
                       print(
                           "Door ${k + 1} Size: ${doorSizeControllers[i][k].text}");
@@ -246,7 +250,8 @@ class _NewProjectPageState extends State<NewProjectPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF4A148C),
+                  backgroundColor:
+                      Color(0xFF4A148C), // Updated here to use backgroundColor
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 ),
