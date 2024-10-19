@@ -1,13 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class FeedbackPage extends StatelessWidget {
+  final TextEditingController feedbackController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
+  // Function to save feedback to Firestore
+  Future<void> _submitFeedback(String email, String feedback) async {
+    try {
+      // Add feedback data to Firestore
+      await FirebaseFirestore.instance.collection('feedback').add({
+        'email': email,
+        'feedback': feedback,
+        'timestamp': FieldValue.serverTimestamp(), // Adds a timestamp field
+      });
+      print('Feedback saved successfully');
+    } catch (e) {
+      print('Error saving feedback: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController feedbackController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true, // This ensures the default back button is present
         backgroundColor: const Color(0xFF4A148C),
         title: const Text(
           "Feedback",
@@ -54,10 +71,12 @@ class FeedbackPage extends StatelessWidget {
             const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   final String feedback = feedbackController.text;
                   final String email = emailController.text;
+
                   if (feedback.isNotEmpty && email.isNotEmpty) {
+                    await _submitFeedback(email, feedback); // Call the function to submit feedback
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Thank you for your feedback!'),

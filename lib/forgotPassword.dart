@@ -1,6 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 
 class ForgotPasswordPage extends StatelessWidget {
+  final TextEditingController _emailController = TextEditingController();
+
+  Future<void> _resetPassword(BuildContext context) async {
+    final String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter your email')),
+      );
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Password reset email sent! Check your inbox.')),
+      );
+      Navigator.pop(context); // Go back to the login screen after reset
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,44 +70,28 @@ class ForgotPasswordPage extends StatelessWidget {
               const SizedBox(height: 20),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
-                  decoration: InputDecoration(
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    hintText: 'New Password',
+                    hintText: 'Enter your email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8.0)),
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Confirm Password',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  obscureText: true,
+                  keyboardType: TextInputType.emailAddress,
                 ),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  // Add password reset logic here
+                  _resetPassword(context); // Trigger password reset
                 },
-                child: const Text('Submit'),
+                child: const Text('Send Reset Email'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 204, 177,
-                      250), // Updated here to use backgroundColor
+                  backgroundColor: const Color.fromARGB(255, 204, 177, 250),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   textStyle: const TextStyle(

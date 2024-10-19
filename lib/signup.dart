@@ -9,13 +9,25 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _nameController =
+      TextEditingController(); // Controller for name
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _selectedPurpose;
 
   Future<void> _register() async {
+    final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+    final purpose = _selectedPurpose;
+
+    // Check if any field is empty
+    if (name.isEmpty || email.isEmpty || password.isEmpty || purpose == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('All fields are required')),
+      );
+      return;
+    }
 
     // Validate email format
     if (!EmailValidator.validate(email)) {
@@ -92,6 +104,24 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Name input field
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                child: TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: 'Name',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Email input field
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -108,6 +138,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Purpose dropdown field
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: DropdownButtonFormField<String>(
@@ -136,6 +167,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Password input field
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 40),
                 child: TextField(
@@ -153,6 +185,7 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              // Sign up button
               ElevatedButton(
                 onPressed: _register,
                 child: const Text('Sign Up'),
