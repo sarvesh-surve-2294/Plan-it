@@ -39,47 +39,43 @@ class DashboardPage extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                // Handle navigation to Profile page
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.add),
               title: const Text('New Project'),
               onTap: () {
+                Navigator.pop(context); // Close the drawer first
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NewProjectPage()),
-                ); // Handle navigation to New Project page
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.history),
               title: const Text('Recent Projects'),
               onTap: () {
+                Navigator.pop(context); // Close the drawer first
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => RecentProjectsPage()),
-                ); // Handle navigation to Recent Projects page
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.favorite),
               title: const Text('Liked Projects'),
               onTap: () {
+                Navigator.pop(context); // Close the drawer first
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LikedProjectsPage()),
-                ); // Handle navigation to Liked Projects page
+                );
               },
             ),
             ListTile(
               leading: const Icon(Icons.info),
               title: const Text('About'),
               onTap: () {
-                // Navigate to the AboutPage
+                Navigator.pop(context); // Close the drawer first
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => AboutPage()),
@@ -90,23 +86,22 @@ class DashboardPage extends StatelessWidget {
               leading: const Icon(Icons.feedback),
               title: const Text('Feedback'),
               onTap: () {
-                Navigator.pushReplacement(
+                Navigator.pop(context); // Close the drawer first
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => FeedbackPage()),
-                ); // Handle navigation to Feedback page
+                );
               },
             ),
-            const Divider(), // Optional: adds a visual separator
+            const Divider(),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                // Navigate to the LoginPage
+                Navigator.pop(context); // Close the drawer first
                 Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          LoginPage()), // Changed from HomePage() to LoginPage()
+                  MaterialPageRoute(builder: (context) => LoginPage()),
                 );
               },
             ),
@@ -129,11 +124,10 @@ class DashboardPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => NewProjectPage()),
-                ); // Define the action for the button here
+                );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color(0xFF4A148C), // Updated here to use backgroundColor
+                backgroundColor: Color(0xFF4A148C), // Button color
                 padding: const EdgeInsets.symmetric(
                     horizontal: 50, vertical: 15), // Button padding
               ),
